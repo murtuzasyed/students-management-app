@@ -4,9 +4,9 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 const validateMessages = {
-  required: "${label} is required!",
+  required: "'${label}' is required!",
   types: {
-    email: "${label} is not a valid email!",
+    email: "'${label}' is not a valid email!",
   },
 };
 
