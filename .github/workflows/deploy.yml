@@ -24,6 +24,7 @@ env:
 
 jobs:
   deploy:
+    permissions: write-all
     runs-on: ubuntu-latest
     services:
       postgres:
