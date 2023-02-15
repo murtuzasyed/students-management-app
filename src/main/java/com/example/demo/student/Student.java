@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table
 public class Student {
-
     @Id
     @SequenceGenerator(
             name="student_sequence",
@@ -43,4 +42,10 @@ public class Student {
     @Column(nullable = false, unique = true)
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
+    public Student(String firstname, String lastname, String email, Gender gender) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.gender = gender;
+    }
 }
