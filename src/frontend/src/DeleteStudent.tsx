@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, Popconfirm } from "antd";
 
-type DeleteStudent = {
+type DeleteStudentProps = {
   onDelete: () => void;
 };
-const DeleteStudent = ({ onDelete }: DeleteStudent) => {
+const DeleteStudent = ({ onDelete }: DeleteStudentProps) => {
   const [open, setOpen] = useState(false);
   return (
     <div>
