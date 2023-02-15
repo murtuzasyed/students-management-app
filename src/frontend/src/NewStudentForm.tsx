@@ -3,13 +3,6 @@ import { Button, Form, Input, Radio, Drawer } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-const validateMessages = {
-  required: "'${label}' is required!",
-  types: {
-    email: "'${label}' is not a valid email!",
-  },
-};
-
 enum Gender {
   Male = "MALE",
   Female = "FEMALE",
@@ -62,33 +55,32 @@ const NewStudentForm = ({
             .catch((err) => onError(err))
             .finally(() => setSubmitting(false));
         }}
-        validateMessages={validateMessages}
       >
         <Form.Item
           name={["student", "firstname"]}
           label="Firstname"
-          rules={[{ required: true }]}
+          rules={[{required: true, message: 'Please enter student firstname'}]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name={["student", "lastname"]}
           label="Lastname"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: 'Please enter student lastname' }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name={["student", "email"]}
           label="Email"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: 'Please enter student email' }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           label="Gender"
           name={["student", "gender"]}
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: 'Please enter student gender' }]}
         >
           <Radio.Group>
             <Radio value={Gender.Male}>Male</Radio>
