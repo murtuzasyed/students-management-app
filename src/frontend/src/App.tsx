@@ -193,7 +193,7 @@ function App() {
             </>
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            Powered by Ant Design ©2018
+            Powered by Ant Design ©2018. Created by Murtuza Syed
           </Footer>
         </Layout>
       </Layout>
