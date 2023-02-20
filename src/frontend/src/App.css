@@ -38,5 +38,8 @@
 
 .modify-actions {
   display: flex;
-  justify-content: space-between;
+}
+
+.edit-button {
+  padding-right: 1rem;
 }

@@ -1,4 +1,5 @@
-import { INewStudentFormData } from "./NewStudentForm";
+import { INewStudentFormData } from "./components/NewStudentForm";
+const BASE_URL = "api/"
 const checkStatus = async (response: Response) => {
   if (!response.ok) {
     const errorBody = await response.json();
@@ -25,6 +26,22 @@ export async function deleteStudent(studentId: number) {
       method: "DELETE",
     });
     await checkStatus(response);
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function editStudent(payload: INewStudentFormData) {
+  try {
+    const response = await fetch("api/v1/students", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    await checkStatus(response);
+    return payload;
   } catch (err) {
     throw err;
   }

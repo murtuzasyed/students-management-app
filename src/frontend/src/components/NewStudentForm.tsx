@@ -1,35 +1,31 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Button, Form, Input, Radio, Drawer } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
+import {StudentData, Gender} from "./StudentList";
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-enum Gender {
-  Male = "MALE",
-  Female = "FEMALE",
-}
 
-export interface INewStudentFormData {
-  firstname: "string";
-  lastname: "string";
-  email: "string";
-  gender: Gender;
-}
+export type INewStudentFormData = Omit<StudentData, "id">;
 interface INewStudentFormProps {
   handleSubmit: (formData: INewStudentFormData) => Promise<INewStudentFormData>;
   showAddStudentDrawer: boolean;
   onSuccessfulAdd: (student: INewStudentFormData) => void;
   onClose: () => void;
   onError: (error: Error) => void;
+  initialValues: INewStudentFormData | null
 }
 const NewStudentForm = ({
   handleSubmit,
   showAddStudentDrawer,
   onSuccessfulAdd,
   onClose,
-  onError,
+  onError, initialValues
 }: INewStudentFormProps) => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => form.resetFields(), [initialValues]);
+
   return (
     <Drawer
       width={720}
@@ -43,7 +39,7 @@ const NewStudentForm = ({
         form={form}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 16 }}
-        initialValues={{ remember: true }}
+        initialValues={{remember:true}}
         onFinish={({ student }) => {
           form.resetFields();
           setSubmitting(true);
@@ -60,6 +56,7 @@ const NewStudentForm = ({
           name={["student", "firstname"]}
           label="Firstname"
           rules={[{required: true, message: 'Please enter student firstname'}]}
+          initialValue={initialValues?.firstname}
         >
           <Input />
         </Form.Item>
@@ -67,6 +64,7 @@ const NewStudentForm = ({
           name={["student", "lastname"]}
           label="Lastname"
           rules={[{ required: true, message: 'Please enter student lastname' }]}
+          initialValue={initialValues?.lastname}
         >
           <Input />
         </Form.Item>
@@ -74,6 +72,7 @@ const NewStudentForm = ({
           name={["student", "email"]}
           label="Email"
           rules={[{ required: true, message: 'Please enter student email' }]}
+          initialValue={initialValues?.email}
         >
           <Input />
         </Form.Item>
@@ -81,6 +80,7 @@ const NewStudentForm = ({
           label="Gender"
           name={["student", "gender"]}
           rules={[{ required: true, message: 'Please enter student gender' }]}
+          initialValue={initialValues?.gender}
         >
           <Radio.Group>
             <Radio value={Gender.Male}>Male</Radio>
