@@ -11,7 +11,7 @@ interface StudentState {
   error: StudentError;
 }
 const initialState: StudentState = {
-  students: new Array(),
+  students: [],
   isLoading: false,
   error: {
     isError: false,
