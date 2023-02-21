@@ -39,7 +39,7 @@ public class Student {
     @Column(nullable = false, unique = true)
     private String email;
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
     public Student(String firstname, String lastname, String email, Gender gender) {
