@@ -91,7 +91,6 @@ function StudentList() {
     dispatch(retrieveStudents());
   }, [dispatch]);
   useEffect(() => {
-    debugger;
     initFetch();
   }, [initFetch]);
   return (

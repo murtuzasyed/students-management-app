@@ -17,7 +17,6 @@ interface INewStudentFormProps {
   initialValues: Student | null;
 }
 const NewStudentForm = ({
-  // handleSubmit,
   showAddStudentDrawer,
   onSuccessfulAdd,
   onSuccessfulEdit,
