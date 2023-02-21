@@ -1,11 +1,6 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  isAnyOf,
-  PayloadAction,
-} from "@reduxjs/toolkit";
-import StudentDataService, { Student } from "../services/StudentService";
-import { RootState } from "../app/store";
+import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
+import StudentDataService, { Student } from "./studentService";
+import { RootState } from "../../app/store";
 interface StudentError {
   isError: boolean;
   message: string;
@@ -135,5 +130,4 @@ export const studentSlice = createSlice({
   },
 });
 export const selectStudent = (state: RootState) => state.student;
-export const selectError = (state: RootState) => state.student.error;
 export default studentSlice.reducer;

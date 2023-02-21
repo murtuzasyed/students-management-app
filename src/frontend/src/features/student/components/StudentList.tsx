@@ -1,18 +1,15 @@
 import { useEffect, useState, useCallback } from "react";
-import { useSelector } from "react-redux";
 import { Avatar, Badge, Button, Spin, Table, Tag } from "antd";
 import DeleteStudent from "./DeleteStudent";
-import EditStudent from "./EditStudent";
-// import { addStudent, deleteStudent } from "../api";
 import {
   retrieveStudents,
   deleteStudent,
   selectStudent,
-} from "../slices/student";
+} from "../studentSlice";
 import openNotificationWithIcon, { NotificationType } from "./Notification";
 import { PlusOutlined } from "@ant-design/icons";
 import NewStudentForm, { INewStudentFormData } from "./NewStudentForm";
-import { useAppDispatch, useAppSelector } from "../app/hook";
+import { useAppDispatch, useAppSelector } from "../../../app/hook";
 export enum Gender {
   Male = "MALE",
   Female = "FEMALE",
@@ -73,6 +70,16 @@ const tableColumns = (
     ),
   },
 ];
+type EditStudentProps = {
+  onEdit: () => void;
+};
+const EditStudent = ({ onEdit }: EditStudentProps) => {
+  return (
+    <div className={"edit-button"}>
+      <Button onClick={onEdit}>Edit</Button>
+    </div>
+  );
+};
 
 function StudentList() {
   const { isLoading, students } = useAppSelector(selectStudent);

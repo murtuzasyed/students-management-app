@@ -1,5 +1,5 @@
-import { INewStudentFormData } from "./components/NewStudentForm";
-const BASE_URL = "api/"
+import { INewStudentFormData } from "../features/student/components/NewStudentForm";
+const BASE_URL = "api/";
 const checkStatus = async (response: Response) => {
   if (!response.ok) {
     const errorBody = await response.json();

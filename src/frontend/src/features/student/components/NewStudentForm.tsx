@@ -1,15 +1,10 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hook";
+import { useAppDispatch, useAppSelector } from "../../../app/hook";
 import { Button, Form, Input, Radio, Drawer } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
-import { Student, Gender } from "../services/StudentService";
-import {
-  createStudent,
-  updateStudent,
-  selectStudent,
-  selectError,
-} from "../slices/student";
+import { Student, Gender } from "../studentService";
+import { createStudent, updateStudent, selectStudent } from "../studentSlice";
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 export type INewStudentFormData = Omit<Student, "id">;
