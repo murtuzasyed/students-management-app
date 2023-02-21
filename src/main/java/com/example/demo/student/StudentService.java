@@ -5,6 +5,9 @@ import com.example.demo.student.exceptions.StudentNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +22,12 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addStudent(Student student) {
+    public ResponseEntity<Student> addStudent(Student student) {
         if(studentRepository.selectExistsEmail(student.getEmail())) {
             throw new BadRequestException("Student with email " + student.getEmail() + " already exists");
         }
-        studentRepository.save(student);
+        Student _student =  studentRepository.save(student);
+        return new ResponseEntity<>(_student, HttpStatus.CREATED);
     }
     public void deleteStudent(Long studentId) {
         if(!studentRepository.existsById(studentId)) {
@@ -31,10 +35,12 @@ public class StudentService {
         }
         studentRepository.deleteById(studentId);
     }
-    public void editStudent(Long studentId, Student student) {
+    public ResponseEntity<Student> editStudent(Long studentId, Student student) {
         Optional<Student> existingStudentData = studentRepository.findById(studentId);
         if(!existingStudentData.isPresent()) {
             throw new StudentNotFoundException("Student with id:" + studentId + " does not exists");
+        } else if(studentRepository.selectExistsEmail(student.getEmail())) {
+            throw new BadRequestException("Student with email " + student.getEmail() + " already exists");
         }
         Student _student = existingStudentData.get();
         _student.setEmail(student.getEmail());
@@ -42,5 +48,6 @@ public class StudentService {
         _student.setFirstname(student.getFirstname());
         _student.setLastname(student.getLastname());
         studentRepository.save(_student);
+        return new ResponseEntity<>(_student,HttpStatus.OK);
     }
 }

@@ -1,17 +1,22 @@
-import { createSlice, createAsyncThunk, isAnyOf } from "@reduxjs/toolkit";
-import StudentDataService, { Student } from "../services/student.service";
-
+import {
+  createSlice,
+  createAsyncThunk,
+  isAnyOf,
+  PayloadAction,
+} from "@reduxjs/toolkit";
+import StudentDataService, { Student } from "../services/StudentService";
+import { RootState } from "../app/store";
 interface StudentError {
   isError: boolean;
   message: string;
 }
 interface StudentState {
-  students: [];
+  students: Array<Student>;
   isLoading: boolean;
   error: StudentError;
 }
 const initialState: StudentState = {
-  students: [],
+  students: new Array(),
   isLoading: false,
   error: {
     isError: false,
@@ -55,10 +60,10 @@ export const updateStudent = createAsyncThunk(
 
 export const deleteStudent = createAsyncThunk(
   "students/delete",
-  async ({ id }: { id: number }, { rejectWithValue }) => {
+  async (id: number, { rejectWithValue }) => {
     try {
-      const res = await StudentDataService.delete(id);
-      return res.data;
+      await StudentDataService.remove(id);
+      return { id };
     } catch (err: any) {
       return rejectWithValue(err?.response?.data);
     }
@@ -66,11 +71,32 @@ export const deleteStudent = createAsyncThunk(
 );
 
 export const studentSlice = createSlice({
-  name: "students",
+  name: "student",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(createStudent.fulfilled, (state, { payload }) => {
+        state.students.push(payload);
+      })
+      .addCase(retrieveStudents.fulfilled, (state, { payload }) => {
+        state.students = payload;
+      })
+      .addCase(deleteStudent.fulfilled, (state, { payload }) => {
+        const deletedIndex = state.students.findIndex(
+          (student: Student) => student.id === payload.id
+        );
+        state.students.splice(deletedIndex, 1);
+      })
+      .addCase(updateStudent.fulfilled, (state, { payload }) => {
+        const editIndex = state.students.findIndex(
+          (student: Student) => student.id === payload.id
+        );
+        state.students[editIndex] = {
+          ...state.students[editIndex],
+          ...payload,
+        };
+      })
       .addMatcher(
         isAnyOf(
           createStudent.pending,
@@ -89,9 +115,8 @@ export const studentSlice = createSlice({
           updateStudent.fulfilled,
           deleteStudent.fulfilled
         ),
-        (state, action) => {
+        (state) => {
           state.isLoading = false;
-          state.students = action.payload;
         }
       )
       .addMatcher(
@@ -101,15 +126,14 @@ export const studentSlice = createSlice({
           updateStudent.rejected,
           deleteStudent.rejected
         ),
-        (state, { payload }) => {
+        (state, { payload }: { payload: any }) => {
           state.isLoading = false;
-          state.students = [];
           state.error.isError = true;
-          state.error.message = typeof payload === 'string' ? payload : '';
+          state.error.message = payload.message;
         }
       );
   },
 });
-export const selectStudents = (state: StudentState) => state.students;
-export const selectError = (state: StudentState) => state.error;
+export const selectStudent = (state: RootState) => state.student;
+export const selectError = (state: RootState) => state.student.error;
 export default studentSlice.reducer;

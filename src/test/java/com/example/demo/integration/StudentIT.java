@@ -47,7 +47,7 @@ public class StudentIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(student)));
 
-        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(status().isCreated());
         List<Student> students = studentRepository.findAll();
         assertThat(students)
                 .usingElementComparatorIgnoringFields("id")

@@ -1,30 +1,39 @@
-import React, {useEffect, useState} from "react";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hook";
 import { Button, Form, Input, Radio, Drawer } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
-import {StudentData, Gender} from "./StudentList";
+import { Student, Gender } from "../services/StudentService";
+import {
+  createStudent,
+  updateStudent,
+  selectStudent,
+  selectError,
+} from "../slices/student";
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
-export type INewStudentFormData = Omit<StudentData, "id">;
+export type INewStudentFormData = Omit<Student, "id">;
 interface INewStudentFormProps {
-  handleSubmit: (formData: INewStudentFormData) => Promise<INewStudentFormData>;
   showAddStudentDrawer: boolean;
   onSuccessfulAdd: (student: INewStudentFormData) => void;
+  onSuccessfulEdit: (student: INewStudentFormData) => void;
   onClose: () => void;
   onError: (error: Error) => void;
-  initialValues: INewStudentFormData | null
+  initialValues: Student | null;
 }
 const NewStudentForm = ({
-  handleSubmit,
+  // handleSubmit,
   showAddStudentDrawer,
   onSuccessfulAdd,
+  onSuccessfulEdit,
   onClose,
-  onError, initialValues
+  onError,
+  initialValues,
 }: INewStudentFormProps) => {
   const [form] = Form.useForm();
-  const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => form.resetFields(), [initialValues]);
+  const { isLoading } = useAppSelector(selectStudent);
+  const dispatch = useAppDispatch();
+  useEffect(() => form.resetFields(), [form, initialValues]);
 
   return (
     <Drawer
@@ -39,23 +48,33 @@ const NewStudentForm = ({
         form={form}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 16 }}
-        initialValues={{remember:true}}
-        onFinish={({ student }) => {
-          form.resetFields();
-          setSubmitting(true);
-          handleSubmit(student)
-            .then(() => {
-              onSuccessfulAdd(student);
-              setSubmitting(false);
-            })
-            .catch((err) => onError(err))
-            .finally(() => setSubmitting(false));
+        initialValues={{ remember: true }}
+        onFinish={async ({ student }: { student: Omit<Student, "id"> }) => {
+          if (initialValues === null) {
+            dispatch(createStudent(student))
+              .unwrap()
+              .then(() => {
+                form.resetFields();
+                onSuccessfulAdd(student);
+              })
+              .catch((err) => onError(err));
+          } else {
+            dispatch(updateStudent({ id: initialValues.id, data: student }))
+              .unwrap()
+              .then(() => {
+                form.resetFields();
+                onSuccessfulEdit(student);
+              })
+              .catch((err) => onError(err));
+          }
         }}
       >
         <Form.Item
           name={["student", "firstname"]}
           label="Firstname"
-          rules={[{required: true, message: 'Please enter student firstname'}]}
+          rules={[
+            { required: true, message: "Please enter student firstname" },
+          ]}
           initialValue={initialValues?.firstname}
         >
           <Input />
@@ -63,7 +82,7 @@ const NewStudentForm = ({
         <Form.Item
           name={["student", "lastname"]}
           label="Lastname"
-          rules={[{ required: true, message: 'Please enter student lastname' }]}
+          rules={[{ required: true, message: "Please enter student lastname" }]}
           initialValue={initialValues?.lastname}
         >
           <Input />
@@ -71,7 +90,7 @@ const NewStudentForm = ({
         <Form.Item
           name={["student", "email"]}
           label="Email"
-          rules={[{ required: true, message: 'Please enter student email' }]}
+          rules={[{ required: true, message: "Please enter student email" }]}
           initialValue={initialValues?.email}
         >
           <Input />
@@ -79,7 +98,7 @@ const NewStudentForm = ({
         <Form.Item
           label="Gender"
           name={["student", "gender"]}
-          rules={[{ required: true, message: 'Please enter student gender' }]}
+          rules={[{ required: true, message: "Please enter student gender" }]}
           initialValue={initialValues?.gender}
         >
           <Radio.Group>
@@ -92,7 +111,7 @@ const NewStudentForm = ({
             Submit
           </Button>
         </Form.Item>
-        {submitting && <Spin indicator={antIcon} />}
+        {isLoading && <Spin indicator={antIcon} />}
       </Form>
     </Drawer>
   );
