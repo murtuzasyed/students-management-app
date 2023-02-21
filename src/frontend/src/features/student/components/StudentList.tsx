@@ -10,18 +10,8 @@ import openNotificationWithIcon, { NotificationType } from "./Notification";
 import { PlusOutlined } from "@ant-design/icons";
 import NewStudentForm, { INewStudentFormData } from "./NewStudentForm";
 import { useAppDispatch, useAppSelector } from "../../../app/hook";
-export enum Gender {
-  Male = "MALE",
-  Female = "FEMALE",
-}
+import { Student as StudentData } from "../studentService";
 
-export type StudentData = {
-  id: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  gender: Gender;
-};
 const tableColumns = (
   onEdit: (student: StudentData) => void,
   onDelete: (student: StudentData) => void
@@ -70,6 +60,7 @@ const tableColumns = (
     ),
   },
 ];
+
 type EditStudentProps = {
   onEdit: () => void;
 };
@@ -82,17 +73,20 @@ const EditStudent = ({ onEdit }: EditStudentProps) => {
 };
 
 function StudentList() {
-  const { isLoading, students } = useAppSelector(selectStudent);
   const dispatch = useAppDispatch();
+  const { isLoading, students } = useAppSelector(selectStudent);
   const [showAddStudentDrawer, setShowAddStudentDrawer] = useState(false);
   const [initialFormValues, setInitialFormValues] =
     useState<StudentData | null>(null);
+
   const initFetch = useCallback(() => {
     dispatch(retrieveStudents());
   }, [dispatch]);
+
   useEffect(() => {
     initFetch();
   }, [initFetch]);
+
   return (
     <div className="student-list">
       {isLoading && <Spin />}
