@@ -2,12 +2,9 @@ package com.example.demo.integration;
 
 import com.example.demo.student.Gender;
 import com.example.demo.student.Student;
-import com.example.demo.student.StudentController;
 import com.example.demo.student.StudentRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.github.javafaker.Faker;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +15,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 

@@ -37,12 +37,13 @@ public class StudentService {
     }
     public ResponseEntity<Student> editStudent(Long studentId, Student student) {
         Optional<Student> existingStudentData = studentRepository.findById(studentId);
+        Student _student = existingStudentData.get();
         if(!existingStudentData.isPresent()) {
             throw new StudentNotFoundException("Student with id:" + studentId + " does not exists");
-        } else if(studentRepository.selectExistsEmail(student.getEmail())) {
+        } else if(_student.getId()!= studentId && studentRepository.selectExistsEmail(student.getEmail())) {
             throw new BadRequestException("Student with email " + student.getEmail() + " already exists");
         }
-        Student _student = existingStudentData.get();
+
         _student.setEmail(student.getEmail());
         _student.setGender(student.getGender());
         _student.setFirstname(student.getFirstname());
